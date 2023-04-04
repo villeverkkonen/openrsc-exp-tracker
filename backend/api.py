@@ -12,22 +12,22 @@ def root():
 @app.route('/api/hiscores')
 def get_hiscores():
     hiscores = []
-
     for player in players:
-        playerName = player['playerName']
-        if ' ' in playerName:
-            playerName = playerName.replace(' ', '%20')
-
-        URL = "https://rsc.vet/player/preservation/" + playerName
-        r = requests.get(URL)
-        soup = BeautifulSoup(r.content, 'html5lib')
-        row = soup.select_one('table tbody tr:nth-of-type(16)')
-        newExp = parseExpFromRow(row)
-        
+        newExpRow = getNewExpFromHiscores(player['playerName'])
+        newExp = parseExpFromRow(newExpRow) 
         hiscores.append(
             { 'playerName': player['playerName'], 'oldExp': player['oldExp'], 'newExp': newExp })
-
     return hiscores
+
+def getNewExpFromHiscores(playerName):
+    trimmedPlayerName = playerName
+    if ' ' in trimmedPlayerName:
+        trimmedPlayerName = trimmedPlayerName.replace(' ', '%20')
+    URL = "https://rsc.vet/player/preservation/" + trimmedPlayerName
+    r = requests.get(URL)
+    soup = BeautifulSoup(r.content, 'html5lib')
+    row = soup.select_one('table tbody tr:nth-of-type(16)')
+    return row
 
 def parseExpFromRow(row):
     newExp = row.select_one('td:nth-of-type(6)').text
