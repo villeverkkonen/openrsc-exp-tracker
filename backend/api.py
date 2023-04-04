@@ -13,28 +13,32 @@ def root():
 def get_hiscores():
     hiscores = []
     for player in players:
-        newExpRow = getNewExpFromHiscores(player['playerName'])
-        newExp = parseExpFromRow(newExpRow) 
+        new_exp = get_new_exp_from_hiscores(player['playerName'])
+        parsed_new_exp = parse_exp(new_exp) 
         hiscores.append(
-            { 'playerName': player['playerName'], 'oldExp': player['oldExp'], 'newExp': newExp })
+            { 'playerName': player['playerName'], 'oldExp': player['oldExp'], 'newExp': parsed_new_exp })
     return hiscores
 
-def getNewExpFromHiscores(playerName):
-    trimmedPlayerName = playerName
-    if ' ' in trimmedPlayerName:
-        trimmedPlayerName = trimmedPlayerName.replace(' ', '%20')
-    URL = "https://rsc.vet/player/preservation/" + trimmedPlayerName
-    r = requests.get(URL)
-    soup = BeautifulSoup(r.content, 'html5lib')
-    row = soup.select_one('table tbody tr:nth-of-type(16)')
-    return row
+def get_new_exp_from_hiscores(player_name):
+    trimmed_player_name = player_name
+    if ' ' in trimmed_player_name:
+        trimmed_player_name = trimmed_player_name.replace(' ', '%20')
 
-def parseExpFromRow(row):
-    newExp = row.select_one('td:nth-of-type(6)').text
-    newExp = newExp.replace('\n', '')
-    newExp = newExp.replace(',', '.')
-    newExp = float(newExp)
-    return newExp
+    URL = "https://rsc.vet/player/preservation/" + trimmed_player_name
+    r = requests.get(URL)
+    soup = BeautifulSoup(r.content, 'lxml')
+
+    skill_string = soup.find(lambda tag: tag.name == 'a' and 'Agility' in tag.text)
+    skill_column = skill_string.find_parent('td')
+    skill_row = skill_column.find_parent('tr')
+
+    return skill_row.select_one('td:nth-of-type(6)').text
+
+def parse_exp(new_exp):
+    parsed_new_exp = new_exp.replace('\n', '')
+    parsed_new_exp = parsed_new_exp.replace(',', '.')
+    parsed_new_exp = float(parsed_new_exp)
+    return parsed_new_exp
 
 if __name__ == '__main__':
     app.run()  
