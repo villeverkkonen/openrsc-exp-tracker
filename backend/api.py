@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from players import players
 from fastapi.staticfiles import StaticFiles
-from hiscores import hiscores
+from hiscores import hiscores, dummy_hiscores
 
 
 app = FastAPI(
@@ -16,4 +16,5 @@ app.mount("/", StaticFiles(directory="../client/dist", html=True), name="client"
 
 @api_app.get('/hiscores')
 async def get_hiscores():
-    return hiscores
+    # return hiscores
+    return dummy_hiscores

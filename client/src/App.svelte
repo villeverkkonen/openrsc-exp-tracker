@@ -1,10 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { Card } from "flowbite-svelte";
 
-  let hiscores = []
+  let hiscores = [];
+  let highestExpGain = 0
 
   onMount(async () => {
-    await getHiscores()
+    await getHiscores();
   });
 
   async function getHiscores() {
@@ -17,46 +19,44 @@
 
     let result = await response.json();
     hiscores = result;
+    highestExpGain = Math.max(...result.map(hiscore=> hiscore.gainedExp))
   }
 </script>
 
 <main>
-  <h1>OpenRSC Skilling Competition</h1>
-  {#each hiscores as { playerName, oldExp, newExp, gainedExp }}
-    <div class="playerCard">
-      <p class="playerName">{playerName}</p>
-      <div class="expContainer">
-        <span class="exp">Old exp: {oldExp}</span>
-        <span class="exp expGained">Gained: {gainedExp}</span>
-        <span class="exp">New exp: {newExp}</span>
-      </div>
-    </div>
-  {/each}
+  <!-- <h1 class="my-5 text-center">OpenRSC gained overall experience tracker</h1> -->
+  <div>
+    {#each hiscores as { playerName, gainedExp }}
+      <Card
+        class="my-5 m-auto items-center mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
+      >
+        <h5>{playerName}</h5>
+        <div class="expContainer">
+          <span
+            class="font-normal text-gray-700 dark:text-gray-400 leading-tight"
+            >{(Math.round(gainedExp * 100) / 100).toFixed(2)} exp</span
+          >
+          <div class="expBarContainer">
+            <div class="expBar" style="width:{100 * gainedExp / highestExpGain}%" />
+          </div>
+        </div>
+      </Card>
+    {/each}
+  </div>
 </main>
 
 <style>
-  .playerCard {
-    background-color: black;
-    padding: 3px;
-    margin: 5px;
-    border-radius: 5px;
+  .expBarContainer {
+    background-color: rgb(179, 188, 203);
+    height: 24px;
+    width: 100%;
+    padding: 4px;
+    border-radius: 3px;
+    margin: 5px 0 5px 0;
   }
 
-  .playerName {
-    text-align: center;
-  }
-
-  .expContainer {
-    display: flex;
-    text-align: center;
-  }
-
-  .exp {
-    padding-left: 10px;
-    padding-right: 10px;
-  }
-
-  .expGained {
-    color: red;
+  .expBar {
+    background-color: cyan;
+    height: 100%;
   }
 </style>
