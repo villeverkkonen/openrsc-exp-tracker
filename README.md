@@ -4,4 +4,4 @@ Python backend does webscraping from rsc.vet hiscores every hour for every invol
 
 In frontend we can show each players starting and so far gained experience and possibly do some visual graphics with that data.
 
-![Frontpage](/public/images/client.png)
+![Frontpage](/client/public/images/client.png)
