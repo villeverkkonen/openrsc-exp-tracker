@@ -1,10 +1,10 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  let hiscores = [];
+  let hiscores = []
 
   onMount(async () => {
-    await getHiscores();
+    await getHiscores()
   });
 
   async function getHiscores() {
@@ -16,7 +16,6 @@
     });
 
     let result = await response.json();
-    console.log(result);
     hiscores = result;
   }
 </script>
@@ -42,6 +41,7 @@
     margin: 5px;
     border-radius: 5px;
   }
+
   .playerName {
     text-align: center;
   }
