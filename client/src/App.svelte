@@ -2,8 +2,15 @@
   import { onMount } from "svelte";
   import { Card } from "flowbite-svelte";
 
-  let hiscores = [];
-  let highestExpGain = 0
+  interface Hiscore {
+    playerName: string;
+    oldExp: number;
+    newExp: number;
+    gainedExp: number;
+  }
+
+  let hiscores: Hiscore[] = [];
+  let highestExpGain: number = 0;
 
   onMount(async () => {
     await getHiscores();
@@ -17,9 +24,9 @@
       },
     });
 
-    let result = await response.json();
+    let result: Hiscore[] = await response.json();
     hiscores = result;
-    highestExpGain = Math.max(...result.map(hiscore=> hiscore.gainedExp))
+    highestExpGain = Math.max(...result.map((hiscore) => hiscore.gainedExp));
   }
 </script>
 
@@ -37,7 +44,12 @@
             >{(Math.round(gainedExp * 100) / 100).toFixed(2)} exp</span
           >
           <div class="expBarContainer">
-            <div class="expBar" style="width:{100 * gainedExp / highestExpGain}%" />
+            <div
+              class="expBar"
+              style="width:{highestExpGain === 0
+                ? 0
+                : (100 * gainedExp) / highestExpGain}%"
+            />
           </div>
         </div>
       </Card>

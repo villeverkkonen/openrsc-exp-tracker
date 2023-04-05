@@ -1,8 +1,6 @@
 import asyncio
 import logging
-
 import uvicorn
-
 from api import app as app_fastapi
 from scheduler import app as app_rocketry
 
@@ -14,10 +12,12 @@ class Server(uvicorn.Server):
 
 
 async def main():
-    server = Server(config=uvicorn.Config(app_fastapi, workers=1, loop="asyncio"))
+    server = Server(config=uvicorn.Config(
+        app_fastapi, workers=1, loop="asyncio"))
     api = asyncio.create_task(server.serve())
     sched = asyncio.create_task(app_rocketry.serve())
     await asyncio.wait([sched, api])
+
 
 if __name__ == "__main__":
     logger = logging.getLogger("rocketry.task")

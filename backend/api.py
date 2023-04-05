@@ -13,7 +13,6 @@ app.mount("/api", api_app)
 app.mount("/", StaticFiles(directory="../client/dist", html=True), name="client")
 
 
-
 @api_app.get('/hiscores')
 async def get_hiscores():
     # return hiscores
