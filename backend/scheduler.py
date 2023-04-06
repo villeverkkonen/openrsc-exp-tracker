@@ -8,6 +8,9 @@ from players import players
 
 app = Rocketry(config={"task_execution": "async"})
 
+@app.task(every("5 seconds"))
+async def test():
+    print('TEST')
 
 # @app.task(every("2 minutes"))
 async def update_hiscores():
