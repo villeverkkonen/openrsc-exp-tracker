@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { Card } from "flowbite-svelte";
 
   interface Hiscore {
     playerName: string;
@@ -31,18 +30,15 @@
 </script>
 
 <main>
-  <h1 class="my-5 text-center">OpenRSC gained overall experience tracker since 8.4.2023</h1>
+  <h1>
+    OpenRSC gained overall experience tracker since 8.4.2023
+  </h1>
   <div>
     {#each hiscores as { playerName, gainedExp }}
-      <Card
-        class="my-5 m-auto items-center mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
-      >
+      <div>
         <h5>{playerName}</h5>
         <div class="expContainer">
-          <span
-            class="font-normal text-gray-700 dark:text-gray-400 leading-tight"
-            >{(Math.round(gainedExp * 100) / 100).toFixed(2)} exp</span
-          >
+          <span>{(Math.round(gainedExp * 100) / 100).toFixed(2)} exp</span>
           <div class="expBarContainer">
             <div
               class="expBar"
@@ -52,7 +48,7 @@
             />
           </div>
         </div>
-      </Card>
+      </div>
     {/each}
   </div>
 </main>
