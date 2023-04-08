@@ -31,7 +31,7 @@
 </script>
 
 <main>
-  <!-- <h1 class="my-5 text-center">OpenRSC gained overall experience tracker</h1> -->
+  <h1 class="my-5 text-center">OpenRSC gained overall experience tracker since 8.4.2023</h1>
   <div>
     {#each hiscores as { playerName, gainedExp }}
       <Card

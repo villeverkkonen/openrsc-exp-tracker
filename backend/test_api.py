@@ -1,13 +1,23 @@
 from fastapi.testclient import TestClient
-from api import app
+from unittest.mock import patch
+import api
 
-client = TestClient(app)
+client = TestClient(api.app)
 
 
-def test_get_hiscores():
+def test_root():
+    response = client.get("/")
+    assert response.status_code == 200
+
+
+@patch.object(api, "get_hiscores")
+def test_get_hiscores(get_hiscores):
+    get_hiscores.return_value = mock_hiscores
     response = client.get("/api/hiscores")
     assert response.status_code == 200
-    assert response.json() == {"msg": "Hello World"}
+    assert response.json() == mock_hiscores
+    get_hiscores.assert_called_once()
+
 
 mock_hiscores = [
     {
