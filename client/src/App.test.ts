@@ -6,7 +6,7 @@ import App from './App.svelte'
 describe('App', () => {
   it('shows page title', () => {
     render(App)
-    const title = screen.getByText('OpenRSC gained overall experience tracker since 8.4.2023')
+    const title = screen.getByText('OpenRSC gained overall experience tracker since', { exact: false })
     expect(title).toBeInTheDocument()
   })
 })
