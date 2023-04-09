@@ -11,6 +11,7 @@
 
   let hiscores: Hiscore[] = [];
   let highestExpGain: number = 0;
+  let loading: boolean = true;
 
   onMount(async () => {
     await getHiscores();
@@ -30,19 +31,21 @@
       .catch((error) => {
         console.log(error);
       })
-      .finally(() => {});
+      .finally(() => {
+        loading = false;
+      });
   }
 </script>
 
 <main>
-  <h5>OpenRSC gained overall experience tracker since 9.4.2023</h5>
-  {#await getHiscores()}
+  <h3>OpenRSC gained overall experience tracker since 9.4.2023</h3>
+  {#if loading}
     <p>Loading...</p>
-  {:then}
+  {:else}
     <div class="cardContainer">
       {#each hiscores as { playerName, gainedExp }}
         <div class="card">
-          <h5>{playerName}</h5>
+          <span class="playerName">{playerName}</span>
           <div class="expContainer">
             <span>{Math.round(gainedExp * 100) / 100} exp</span>
             <div class="expBarContainer">
@@ -57,31 +60,44 @@
         </div>
       {/each}
     </div>
-  {/await}
+  {/if}
 </main>
 
 <style>
-  h5 {
+  :global(html) {
+    background-color: black;
+  }
+
+  h3 {
     text-align: center;
+    color: rgb(255 165 0);
   }
 
   .cardContainer {
     text-align: center;
     width: 50%;
-    margin: auto;
+    margin: 5px auto;
   }
 
   .card {
-    background-color: rgb(101, 83, 59);
+    background-color: rgb(65 105 225);
+    color: rgb(255 165 0);
+    padding: 5px;
+    margin: 10px;
+    border-radius: 10px;
+  }
+
+  .playerName {
+    font-weight: bold;
   }
 
   .expBarContainer {
-    background-color: rgb(179, 188, 203);
+    background-color: rgb(119 136 153);
     height: 24px;
-    width: 100%;
+    width: 90%;
     padding: 4px;
     border-radius: 3px;
-    margin: 5px 0 5px 0;
+    margin: 5px auto;
   }
 
   .expBar {

@@ -8,7 +8,7 @@ from players import players
 
 app = Rocketry(config={"task_execution": "async"})
 
-# @app.task(every("2 minutes"))
+@app.task(every("2 hours"))
 async def update_hiscores():
     print('Starting hiscore update')
     hiscores.clear()
