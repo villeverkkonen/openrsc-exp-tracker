@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import axios from "axios";
 
   interface Hiscore {
     playerName: string;
@@ -16,26 +17,30 @@
   });
 
   async function getHiscores() {
-    let response = await fetch("/api/hiscores", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    await axios
+      .get("/api/hiscores")
+      .then((response) => {
+        let result: Hiscore[] = response.data;
 
-    let result: Hiscore[] = await response.json();
-    hiscores = result;
-    highestExpGain = Math.max(...result.map((hiscore) => hiscore.gainedExp));
+        hiscores = result;
+        highestExpGain = Math.max(
+          ...result.map((hiscore) => hiscore.gainedExp)
+        );
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {});
   }
 </script>
 
 <main>
-  <h1>
-    OpenRSC gained overall experience tracker since 8.4.2023
-  </h1>
-  <div>
-    {#each hiscores as { playerName, gainedExp }}
-      <div>
+  <h1>OpenRSC gained overall experience tracker since 8.4.2023</h1>
+  {#await getHiscores()}
+    <p>Loading...</p>
+  {:then}
+    <div>
+      {#each hiscores as { playerName, gainedExp }}
         <h5>{playerName}</h5>
         <div class="expContainer">
           <span>{(Math.round(gainedExp * 100) / 100).toFixed(2)} exp</span>
@@ -48,9 +53,9 @@
             />
           </div>
         </div>
-      </div>
-    {/each}
-  </div>
+      {/each}
+    </div>
+  {/await}
 </main>
 
 <style>

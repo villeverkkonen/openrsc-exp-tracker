@@ -18,5 +18,5 @@ async def get_hiscores():
 
 
 def get_hiscores():
-    return hiscores
-    # return dummy_hiscores
+    # return hiscores
+    return dummy_hiscores

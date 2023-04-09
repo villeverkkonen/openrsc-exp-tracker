@@ -21,6 +21,12 @@ def test_get_hiscores(get_hiscores):
 
 mock_hiscores = [
     {
+        'playerName': 'Lord Jolt',
+        'oldExp': 50.0,
+        'newExp': 300.0,
+        'gainedExp': 250.0
+    },
+    {
         'playerName': 'Purilainen',
         'oldExp': 100.0,
         'newExp': 200.0,
@@ -31,11 +37,5 @@ mock_hiscores = [
         'oldExp': 200.0,
         'newExp': 250.0,
         'gainedExp': 50.0
-    },
-    {
-        'playerName': 'Lord Jolt',
-        'oldExp': 50.0,
-        'newExp': 300.0,
-        'gainedExp': 250.0
     }
 ]
