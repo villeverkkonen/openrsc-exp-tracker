@@ -16,6 +16,6 @@ RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
 COPY ./backend .
 
-EXPOSE 8005
+EXPOSE 9000
 
 CMD ["python", "-u", "main.py"]

@@ -76,6 +76,7 @@
   .cardContainer {
     text-align: center;
     width: 50%;
+    max-width: 25rem;
     margin: 5px auto;
   }
 
