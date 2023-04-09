@@ -51,8 +51,11 @@ describe('App', () => {
     await waitFor(() => {
       expect(screen.queryByText('Loading...')).toBeNull()
       expect(screen.getByText('Lord Jolt')).toBeInTheDocument()
+      expect(screen.getByText('250 exp')).toBeInTheDocument()
       expect(screen.getByText('Purilainen')).toBeInTheDocument()
+      expect(screen.getByText('100 exp')).toBeInTheDocument()
       expect(screen.getByText('LeChuck')).toBeInTheDocument()
+      expect(screen.getByText('50 exp')).toBeInTheDocument()
     })
   })
 })
