@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import axios from "axios";
+  import { onMount } from "svelte";
 
   interface Hiscore {
     playerName: string;
@@ -35,22 +35,24 @@
 </script>
 
 <main>
-  <h1>OpenRSC gained overall experience tracker since 8.4.2023</h1>
+  <h5>OpenRSC gained overall experience tracker since 9.4.2023</h5>
   {#await getHiscores()}
     <p>Loading...</p>
   {:then}
-    <div>
+    <div class="cardContainer">
       {#each hiscores as { playerName, gainedExp }}
-        <h5>{playerName}</h5>
-        <div class="expContainer">
-          <span>{(Math.round(gainedExp * 100) / 100).toFixed(2)} exp</span>
-          <div class="expBarContainer">
-            <div
-              class="expBar"
-              style="width:{highestExpGain === 0
-                ? 0
-                : (100 * gainedExp) / highestExpGain}%"
-            />
+        <div class="card">
+          <h5>{playerName}</h5>
+          <div class="expContainer">
+            <span>{Math.round(gainedExp * 100) / 100} exp</span>
+            <div class="expBarContainer">
+              <div
+                class="expBar"
+                style="width:{highestExpGain === 0
+                  ? 0
+                  : (100 * gainedExp) / highestExpGain}%"
+              />
+            </div>
           </div>
         </div>
       {/each}
@@ -59,6 +61,20 @@
 </main>
 
 <style>
+  h5 {
+    text-align: center;
+  }
+
+  .cardContainer {
+    text-align: center;
+    width: 50%;
+    margin: auto;
+  }
+
+  .card {
+    background-color: rgb(101, 83, 59);
+  }
+
   .expBarContainer {
     background-color: rgb(179, 188, 203);
     height: 24px;

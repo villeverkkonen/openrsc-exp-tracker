@@ -8,21 +8,21 @@ import App from './App.svelte'
 const mockHiscores = [
   {
     'playerName': 'Lord Jolt',
-    'oldExp': 50.0,
-    'newExp': 300.0,
-    'gainedExp': 250.0
+    'oldExp': 50,
+    'newExp': 300,
+    'gainedExp': 250
   },
   {
     'playerName': 'Purilainen',
-    'oldExp': 100.0,
-    'newExp': 200.0,
-    'gainedExp': 100.0
+    'oldExp': 100,
+    'newExp': 200,
+    'gainedExp': 100
   },
   {
     'playerName': 'LeChuck',
-    'oldExp': 200.0,
-    'newExp': 250.0,
-    'gainedExp': 50.0
+    'oldExp': 200,
+    'newExp': 250,
+    'gainedExp': 50
   }
 ]
 

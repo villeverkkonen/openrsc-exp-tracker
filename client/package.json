@@ -21,7 +21,8 @@
         }
       ],
       "^.+\\.ts$": "ts-jest",
-      "^.+\\.js$": "babel-jest"
+      "^.+\\.js$": "babel-jest",
+      "^.+\\.mjs$": "babel-jest"
     },
     "moduleFileExtensions": [
       "js",

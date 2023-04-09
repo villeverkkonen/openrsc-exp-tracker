@@ -8,10 +8,6 @@ from players import players
 
 app = Rocketry(config={"task_execution": "async"})
 
-@app.task(every("5 seconds"))
-async def test():
-    print('TEST')
-
 # @app.task(every("2 minutes"))
 async def update_hiscores():
     print('Starting hiscore update')
@@ -55,18 +51,10 @@ def get_new_exp_from_hiscores(player_name):
 
 def parse_exp(new_exp):
     # Exp comes in a form of \n2,337,597\n
-    # Trim it so it can be parsed to float
+    # Trim it so it can be parsed to int
     parsed_new_exp = new_exp.replace('\n', '')
-    strToReplace = ','
-    replacementStr = '.'
-    # Change last ',' to '.'
-    pos = parsed_new_exp.rfind(strToReplace)
-    if pos > -1:
-        parsed_new_exp = parsed_new_exp[:pos] + replacementStr + \
-            parsed_new_exp[pos + len(strToReplace):]
-    # Remove other commas
-    parsed_new_exp = parsed_new_exp.replace(',', '')
-    parsed_new_exp = float(parsed_new_exp)
+    parsed_new_exp = new_exp.replace(',', '')
+    parsed_new_exp = int(parsed_new_exp)
     return parsed_new_exp
 
 
