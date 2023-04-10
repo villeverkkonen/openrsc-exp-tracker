@@ -26,6 +26,10 @@ Python backend does webscraping from [rsc.vet](https://rsc.vet/) hiscores every 
 8. `python -u main.py` (or python3, -u shows scheduler.py logs)
 9. Open `localhost:9000` from your browser (first load takes about 20 seconds per player)
 
+### Running the tests
+1. For backend tests in folder backend run `pytest`
+2. For frontend tests in folder client run `npm run test`
+
 ### Configuring for your own needs
 1. From backend/players.py file you can change your wanted players with their starting experience of the skill you want.
 2. From scheduler.py file search for text "Overall" and replace it with skill of your choice, for example "Agility"
