@@ -2,6 +2,8 @@
 
 Python backend does webscraping from [rsc.vet](https://rsc.vet/) hiscores every two hours with Rocketry for every involved player and parses the received HTML by BeautifulSoup. Then it updates the hiscores variable which Svelte frontend receives through API call.
 
+### [App in Heroku](https://orsc-skilling-competition.herokuapp.com/)
+
 ![Frontpage](/client/public/images/client.png)
 
 ### Steps to run locally:
