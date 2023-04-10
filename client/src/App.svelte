@@ -38,7 +38,7 @@
 </script>
 
 <main>
-  <h3>OpenRSC gained overall experience tracker since 9.4.2023</h3>
+  <h3>OpenRSC gained overall experience tracker since 10.4.2023</h3>
   {#if loading}
     <p>Loading...</p>
   {:else}
