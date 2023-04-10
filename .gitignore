@@ -31,3 +31,4 @@ backend/venv
 backend/*.pyc
 backend/*.DS_Store
 backend/__pycache__
+.vercel

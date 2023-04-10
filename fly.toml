@@ -1,14 +1,14 @@
-# fly.toml file generated for orsc-skilling-competition on 2023-04-09T23:10:06+03:00
+# fly.toml file generated for orsc-skilling-competition on 2023-04-10T00:08:42+03:00
 
 app = "orsc-skilling-competition"
 kill_signal = "SIGINT"
 kill_timeout = 5
 mounts = []
-primary_region = "arn"
+primary_region = "ams"
 processes = []
 
 [[services]]
-  internal_port = 8005
+  internal_port = 9000
   processes = ["app"]
   protocol = "tcp"
   [services.concurrency]
