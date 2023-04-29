@@ -47,7 +47,7 @@
         <div class="card">
           <span class="playerName">{playerName}</span>
           <div class="expContainer">
-            <span>{Math.round(gainedExp * 100) / 100} exp</span>
+            <span>{(Math.round(gainedExp * 100) / 100).toLocaleString("en-US")} exp</span>
             <div class="expBarContainer">
               <div
                 class="expBar"
