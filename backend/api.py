@@ -1,6 +1,8 @@
 from fastapi import Depends, FastAPI, HTTPException, Request, Response
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
+from itertools import groupby
+from operator import attrgetter
 from database import crud
 from database import models
 from database import schemas
@@ -58,8 +60,11 @@ async def get_hiscores_by_players(db: Session = Depends(get_db)):
     for player in players:
         hiscores = crud.get_hiscores_by_player_id(
             db=db, player_id=player.id)
+
+        most_efficient_day = get_most_efficient_day(hiscores)
+
         hiscores_by_players.append(
-            {"player": player, "hiscores": hiscores})
+            {"player": player, "hiscores": hiscores, "most_efficient_day": most_efficient_day})
     return hiscores_by_players
 
 
@@ -89,6 +94,36 @@ def get_players(db: Session = Depends(get_db)):
 @api_app.get('/players/{name}', response_model=list[schemas.Player])
 def get_player_by_name(name: str, db: Session = Depends(get_db)):
     return crud.get_player_by_name(db=db, name=name)
+
+
+def get_most_efficient_day(hiscores):
+    max_diff = 0
+    max_day = None
+    daily_exp = {}
+
+    for hiscore in hiscores:
+        day = hiscore.created_at.date()
+
+        # Update the earliest and latest new_exp for this day in the dictionary
+        if day in daily_exp:
+            daily_exp[day]['earliest'] = min(
+                daily_exp[day]['earliest'], hiscore.new_exp)
+            daily_exp[day]['latest'] = max(
+                daily_exp[day]['latest'], hiscore.new_exp)
+        else:
+            daily_exp[day] = {'earliest': hiscore.new_exp,
+                              'latest': hiscore.new_exp}
+
+        # Calculate the difference between the earliest and latest new_exp for this day
+        diff = daily_exp[day]['latest'] - daily_exp[day]['earliest']
+
+        # Check if this day has a same or higher difference than the current maximum
+        if diff >= max_diff:
+            max_diff = diff
+            max_day = day
+
+    return {"day": max_day, "gained_exp": max_diff}
+    # print(f"The day with the highest difference between earliest and latest new_exp is {max_day} with a difference of {max_diff}")
 
 
 # Initialize database with dummy data for local testing

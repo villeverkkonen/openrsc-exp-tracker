@@ -2,14 +2,32 @@
   import axios from "axios";
   import { onMount } from "svelte";
 
-  interface Hiscore {
-    playerName: string;
-    oldExp: number;
-    newExp: number;
-    gainedExp: number;
+  interface Player {
+    id: number;
+    name: string;
+    original_exp: number;
+    created_at: Date;
   }
 
-  let hiscores: Hiscore[] = [];
+  interface Hiscore {
+    id: number;
+    new_exp: number;
+    created_at: Date;
+    player_id: number;
+  }
+
+  interface MostEfficientDay {
+    day: string;
+    gained_exp: number;
+  }
+
+  interface HiscoresByPlayer {
+    player: Player;
+    hiscores: Hiscore[];
+    most_efficient_day: MostEfficientDay;
+  }
+
+  let hiscoresByPlayers: HiscoresByPlayer[] = [];
   let highestExpGain: number = 0;
   let loading: boolean = true;
 
@@ -17,15 +35,18 @@
     await getHiscores();
   });
 
-  async function getHiscores() {
+  const getHiscores = async () => {
     await axios
-      .get("/api/hiscores")
+      .get("/api/hiscores_by_players")
       .then((response) => {
-        let result: Hiscore[] = response.data;
-
-        hiscores = result;
+        const result: HiscoresByPlayer[] = response.data;
+        hiscoresByPlayers = result;
         highestExpGain = Math.max(
-          ...result.map((hiscore) => hiscore.gainedExp)
+          ...result.map(
+            (hiscoreByPlayer) =>
+              hiscoreByPlayer.hiscores[hiscoreByPlayer.hiscores.length - 1]
+                .new_exp - hiscoreByPlayer.player.original_exp
+          )
         );
       })
       .catch((error) => {
@@ -34,27 +55,51 @@
       .finally(() => {
         loading = false;
       });
-  }
+  };
 </script>
 
 <main>
-  <h3>OpenRSC gained overall experience tracker since 10.4.2023</h3>
+  <h3>OpenRSC gained overall experience tracker since May 5th 2023</h3>
   {#if loading}
     <p>Loading...</p>
   {:else}
     <div class="cardContainer">
-      {#each hiscores as { playerName, gainedExp }}
+      {#each hiscoresByPlayers as { player, hiscores, most_efficient_day }}
         <div class="card">
-          <span class="playerName">{playerName}</span>
+          <span class="playerName">{player.name}</span>
           <div class="expContainer">
-            <span>{(Math.round(gainedExp * 100) / 100).toLocaleString("en-US")} exp</span>
+            <span
+              >{(
+                Math.round(hiscores[hiscores.length - 1].new_exp * 100) / 100
+              ).toLocaleString("en-US")} exp</span
+            >
             <div class="expBarContainer">
               <div
                 class="expBar"
                 style="width:{highestExpGain === 0
                   ? 0
-                  : (100 * gainedExp) / highestExpGain}%"
+                  : (100 *
+                      (hiscores[hiscores.length - 1].new_exp -
+                        player.original_exp)) /
+                    highestExpGain}%"
               />
+            </div>
+            <div>
+              {#each hiscores as hiscore}
+                <div>
+                  {`${new Date(hiscore.created_at).toDateString()} - ${
+                    hiscore.new_exp
+                  } exp`}
+                </div>
+              {/each}
+            </div>
+            <div>
+              <p>
+                Most efficient day:
+                {`${new Date(most_efficient_day.day).toDateString()} - ${
+                  most_efficient_day.gained_exp
+                } exp`}
+              </p>
             </div>
           </div>
         </div>
