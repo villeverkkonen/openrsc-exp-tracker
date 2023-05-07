@@ -1,6 +1,7 @@
 <script lang="ts">
   import axios from "axios";
   import { onMount } from "svelte";
+  import LineChart from "./components/LineChart.svelte";
 
   interface Player {
     id: number;
@@ -16,15 +17,9 @@
     player_id: number;
   }
 
-  interface MostEfficientDay {
-    day: string;
-    gained_exp: number;
-  }
-
   interface HiscoresByPlayer {
     player: Player;
     hiscores: Hiscore[];
-    most_efficient_day: MostEfficientDay;
   }
 
   let hiscoresByPlayers: HiscoresByPlayer[] = [];
@@ -59,12 +54,12 @@
 </script>
 
 <main>
-  <h3>OpenRSC gained overall experience tracker since May 5th 2023</h3>
+  <h3>OpenRSC gained overall experience tracker</h3>
   {#if loading}
     <p>Loading...</p>
   {:else}
     <div class="cardContainer">
-      {#each hiscoresByPlayers as { player, hiscores, most_efficient_day }}
+      {#each hiscoresByPlayers as { player, hiscores }}
         <div class="card">
           <span class="playerName">{player.name}</span>
           <div class="expContainer">
@@ -84,23 +79,16 @@
                     highestExpGain}%"
               />
             </div>
-            <div>
-              {#each hiscores as hiscore}
-                <div>
-                  {`${new Date(hiscore.created_at).toDateString()} - ${
-                    hiscore.new_exp
-                  } exp`}
-                </div>
-              {/each}
-            </div>
-            <div>
-              <p>
-                Most efficient day:
-                {`${new Date(most_efficient_day.day).toDateString()} - ${
-                  most_efficient_day.gained_exp
-                } exp`}
-              </p>
-            </div>
+            <p>
+              Tracked since {new Date(
+                hiscores.reduce((previous, current) => {
+                  return previous.created_at < current.created_at
+                    ? previous
+                    : current;
+                }).created_at
+              ).toDateString()}
+            </p>
+            <LineChart data={hiscores} />
           </div>
         </div>
       {/each}
