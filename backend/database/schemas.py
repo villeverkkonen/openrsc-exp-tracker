@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 class HiscoreBase(BaseModel):
     new_exp: int
+    total_gained_exp: int
     created_at: datetime = datetime.now()
 
 

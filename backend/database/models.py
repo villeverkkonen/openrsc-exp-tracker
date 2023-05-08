@@ -20,6 +20,7 @@ class Hiscore(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     new_exp = Column(Integer)
+    total_gained_exp = Column(Integer)
     created_at = Column(DateTime)
     player_id = Column(Integer, ForeignKey("players.id"))
 

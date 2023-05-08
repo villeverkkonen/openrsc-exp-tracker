@@ -20,14 +20,32 @@
           {
             label: "Exp",
             data: chartData,
+            borderColor: "cyan",
           },
         ],
       },
       options: {
         animation: false,
+        plugins: {
+          legend: {
+            display: false,
+          },
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: "#e8d800",
+            },
+          },
+          y: {
+            ticks: {
+              color: "#e8d800",
+            },
+          },
+        },
       },
     });
   });
 </script>
 
-<canvas bind:this={chartCanvas} id="myChart" />
+<canvas bind:this={chartCanvas} id="expChart" />

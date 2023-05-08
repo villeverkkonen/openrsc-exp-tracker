@@ -60,9 +60,11 @@ async def get_hiscores_by_players(db: Session = Depends(get_db)):
     for player in players:
         hiscores = crud.get_hiscores_by_player_id(
             db=db, player_id=player.id)
-
         hiscores_by_players.append(
             {"player": player, "hiscores": hiscores})
+    print('hiscores_by_players')
+    print(hiscores_by_players)
+    hiscores_by_players = sorted(hiscores_by_players, key=lambda x: x['hiscores'][-1].total_gained_exp if x['hiscores'] else 0, reverse=True)
     return hiscores_by_players
 
 
