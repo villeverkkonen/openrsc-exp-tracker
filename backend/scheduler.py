@@ -28,7 +28,7 @@ async def update_hiscores():
         parsed_new_exp = parse_exp(new_exp)
         total_gained_exp = parsed_new_exp - player['original_exp']
 
-        hiscore = {"new_exp": parsed_new_exp, "total_new_exp": total_gained_exp}
+        hiscore = {"new_exp": parsed_new_exp, "total_gained_exp": total_gained_exp}
         async with httpx.AsyncClient() as client:
             CREATE_HISCORE_URL = API_BASE_URL + \
                 "/api/players/" + str(player['id']) + "/hiscores"

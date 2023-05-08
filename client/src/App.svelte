@@ -107,7 +107,7 @@
 
 <style>
   :global(html) {
-    background-image: linear-gradient(#121212, black);
+    background-color: #121212;
   }
 
   h3 {
