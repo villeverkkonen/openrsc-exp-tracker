@@ -1,8 +1,8 @@
-# OpenRSC skill experience tracker
+# OpenRSC experience tracker
 
-Python backend does webscraping from [rsc.vet](https://rsc.vet/) hiscores every two hours with Rocketry for every involved player and parses the received HTML by BeautifulSoup. Then it updates the hiscores variable which Svelte frontend receives through API call.
+Python backend does webscraping from [rsc.vet](https://rsc.vet/) hiscores once a day at midnight UTC time with Rocketry for every involved player and parses the received HTML by BeautifulSoup. Hiscores and Players are saved to SQLite database. Svelte frontend receives the data through API call.
 
-### [App in Heroku](https://orsc-skilling-competition.herokuapp.com/)
+### [App in Heroku](https://openrsc-exp-tracker.herokuapp.com/)
 
 ![Frontpage](/client/public/images/client.png)
 
@@ -29,11 +29,15 @@ Python backend does webscraping from [rsc.vet](https://rsc.vet/) hiscores every 
 9. Open `localhost:9000` from your browser (first load takes about 20 seconds per player)
 
 ### Running the tests
+
+Tests currently work in progress at May 8th 2023
 1. For backend tests in folder backend run `pytest`
 2. For frontend tests in folder client run `npm run test`
 
 ### Configuring for your own needs
-1. From backend/players.py file you can change your wanted players with their starting experience of the skill you want.
+1. You can add Players through API with for example Postman
+    - POST request to http://localhost:9000/api/players with JSON body { "name": <name>, "original_exp": <current_exp_from_hiscores> }
 2. From scheduler.py file search for text "Overall" and replace it with skill of your choice, for example "Agility"
 3. From same scheduler.py file you can also change how often the webscraping happens. Though it would be nice not to trigger it too often to not stress test rsc.vet too much.
-4. For dummy data testing you can comment the line `return hiscores` from file api.py, and uncomment the line `# return dummy_hiscores`. You should also comment the line `@app.task(every("2 hours"))` from file scheduler.py so it doesn't trigger the scraping for no reason.
+4. Dummy test data generating script work in progress
+5. You might want to comment out the task rom file scheduler.py so it doesn't trigger the scraping if you don't need it. If you for example create the data manually through API call or SQLite console.
