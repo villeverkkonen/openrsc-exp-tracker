@@ -1,34 +1,44 @@
 import time
-import requests
+import os
+import httpx
 from bs4 import BeautifulSoup
 from rocketry import Rocketry
-from rocketry.conds import every
-from hiscores import hiscores
-from players import players
+from rocketry.conds import cron
 
 app = Rocketry(config={"task_execution": "async"})
 
-@app.task(every("2 hours"))
+
+API_BASE_URL = os.getenv("API_URL", "http://localhost:9000")
+
+
+# Run once a day at midnight
+@app.task(cron("0 0 * * *"))
 async def update_hiscores():
-    print('Starting hiscore update')
-    hiscores.clear()
+    print('Starting hiscores update')
+
+    players = []
+    async with httpx.AsyncClient() as client:
+        GET_PLAYERS_URL = API_BASE_URL + "/api/players"
+        players_response = await client.get(GET_PLAYERS_URL)
+        players = players_response.json()
+
     for index, player in enumerate(players):
-        print('Fetching hiscores for player: ' + player['playerName'])
-        new_exp = get_new_exp_from_hiscores(player['playerName'])
+        print('Updating hiscores for player: ' + player['name'])
+        new_exp = get_new_exp_from_hiscores(player['name'])
         parsed_new_exp = parse_exp(new_exp)
-        hiscores.append(
-            {
-                'playerName': player['playerName'],
-                'oldExp': player['oldExp'],
-                'newExp': parsed_new_exp,
-                'gainedExp': parsed_new_exp - player['oldExp']
-            }
-        )
+        total_gained_exp = parsed_new_exp - player['original_exp']
+
+        hiscore = {"new_exp": parsed_new_exp, "total_new_exp": total_gained_exp}
+        async with httpx.AsyncClient() as client:
+            CREATE_HISCORE_URL = API_BASE_URL + \
+                "/api/players/" + str(player['id']) + "/hiscores"
+            hiscore_response = await client.post(CREATE_HISCORE_URL, json=hiscore)
+            print("Created hiscore:")
+            print(hiscore_response.json())
+
         if index < len(players) - 1:
             # We don't want to burden rsc.vet too much too fast
             time.sleep(15)
-
-    hiscores.sort(key=lambda x: x['gainedExp'], reverse=True)
     print('Hiscores updated!')
 
 
@@ -38,8 +48,8 @@ def get_new_exp_from_hiscores(player_name):
         trimmed_player_name = trimmed_player_name.replace(' ', '%20')
 
     URL = "https://rsc.vet/player/preservation/" + trimmed_player_name
-    r = requests.get(URL)
-    soup = BeautifulSoup(r.content, 'lxml')
+    response = httpx.get(URL)
+    soup = BeautifulSoup(response.content, 'lxml')
 
     skill_string = soup.find(lambda tag: tag.name ==
                              'a' and 'Overall' in tag.text)

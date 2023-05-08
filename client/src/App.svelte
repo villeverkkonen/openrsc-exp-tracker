@@ -1,15 +1,29 @@
 <script lang="ts">
   import axios from "axios";
   import { onMount } from "svelte";
+  import LineChart from "./components/LineChart.svelte";
 
-  interface Hiscore {
-    playerName: string;
-    oldExp: number;
-    newExp: number;
-    gainedExp: number;
+  interface Player {
+    id: number;
+    name: string;
+    original_exp: number;
+    created_at: Date;
   }
 
-  let hiscores: Hiscore[] = [];
+  interface Hiscore {
+    id: number;
+    new_exp: number;
+    total_gained_exp: number;
+    created_at: Date;
+    player_id: number;
+  }
+
+  interface HiscoresByPlayer {
+    player: Player;
+    hiscores: Hiscore[];
+  }
+
+  let hiscoresByPlayers: HiscoresByPlayer[] = [];
   let highestExpGain: number = 0;
   let loading: boolean = true;
 
@@ -17,15 +31,22 @@
     await getHiscores();
   });
 
-  async function getHiscores() {
+  const getHiscores = async () => {
     await axios
-      .get("/api/hiscores")
+      .get("/api/hiscores_by_players")
       .then((response) => {
-        let result: Hiscore[] = response.data;
-
-        hiscores = result;
+        const result: HiscoresByPlayer[] = response.data;
+        hiscoresByPlayers = result;
         highestExpGain = Math.max(
-          ...result.map((hiscore) => hiscore.gainedExp)
+          ...result.map((hiscoreByPlayer) => {
+            if (hiscoreByPlayer.hiscores.length === 0) {
+              return 0;
+            }
+            return (
+              hiscoreByPlayer.hiscores[hiscoreByPlayer.hiscores.length - 1]
+                .new_exp - hiscoreByPlayer.player.original_exp
+            );
+          })
         );
       })
       .catch((error) => {
@@ -34,28 +55,49 @@
       .finally(() => {
         loading = false;
       });
-  }
+  };
 </script>
 
 <main>
-  <h3>OpenRSC gained overall experience tracker since 10.4.2023</h3>
+  <h3>OpenRSC overall experience tracker</h3>
   {#if loading}
     <p>Loading...</p>
   {:else}
     <div class="cardContainer">
-      {#each hiscores as { playerName, gainedExp }}
+      {#each hiscoresByPlayers as { player, hiscores }}
         <div class="card">
-          <span class="playerName">{playerName}</span>
+          <span class="playerName">{player.name}</span>
           <div class="expContainer">
-            <span>{(Math.round(gainedExp * 100) / 100).toLocaleString("en-US")} exp</span>
-            <div class="expBarContainer">
-              <div
-                class="expBar"
-                style="width:{highestExpGain === 0
-                  ? 0
-                  : (100 * gainedExp) / highestExpGain}%"
-              />
-            </div>
+            {#if hiscores.length > 0}
+              <span
+                >{(
+                  Math.round(hiscores[hiscores.length - 1].new_exp * 100) / 100
+                ).toLocaleString("en-US")} exp</span
+              >
+              <div class="expBarContainer">
+                <div
+                  class="expBar"
+                  style="width:{highestExpGain === 0
+                    ? 0
+                    : (100 *
+                        (hiscores[hiscores.length - 1].new_exp -
+                          player.original_exp)) /
+                      highestExpGain}%"
+                />
+              </div>
+              <p>
+                Tracked since {new Date(
+                  hiscores.reduce((previous, current) => {
+                    return previous.created_at < current.created_at
+                      ? previous
+                      : current;
+                  }).created_at
+                ).toDateString()}
+              </p>
+              <LineChart data={hiscores} />
+            {:else}
+              <p>No data to show</p>
+            {/if}
           </div>
         </div>
       {/each}
@@ -65,27 +107,28 @@
 
 <style>
   :global(html) {
-    background-color: black;
+    background-image: linear-gradient(#121212, black);
   }
 
   h3 {
     text-align: center;
-    color: rgb(255 165 0);
+    color: #e8d800;
   }
 
   .cardContainer {
     text-align: center;
-    width: 50%;
+    width: 80%;
     max-width: 25rem;
     margin: 5px auto;
   }
 
   .card {
-    background-color: rgb(65 105 225);
-    color: rgb(255 165 0);
+    background-color: #1e1e1e;
+    box-shadow: 4px 8px black;
+    color: #e8d800;
     padding: 5px;
-    margin: 10px;
-    border-radius: 10px;
+    margin: 15px;
+    border-radius: 5px;
   }
 
   .playerName {
@@ -93,7 +136,7 @@
   }
 
   .expBarContainer {
-    background-color: rgb(119 136 153);
+    background-color: rgb(112 128 144);
     height: 24px;
     width: 90%;
     padding: 4px;
