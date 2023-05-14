@@ -12,7 +12,8 @@ API_BASE_URL = os.getenv("API_URL", "http://localhost:9000")
 
 
 # Run once a day at midnight
-@app.task(cron("0 0 * * *"))
+# @app.task(cron("0 0 * * *"))
+@app.task('every 1 hour')
 async def update_hiscores():
     print('Starting hiscores update')
 

@@ -14,6 +14,10 @@ class Player(Base):
 
     hiscores = relationship("Hiscore", back_populates="player")
 
+    def __repr__(self):
+        return "<Player(id='{}', name='{}', original_exp={}, created_at={})>"\
+            .format(self.id, self.name, self.original_exp, self.created_at)
+
 
 class Hiscore(Base):
     __tablename__ = "hiscores"
@@ -25,3 +29,7 @@ class Hiscore(Base):
     player_id = Column(Integer, ForeignKey("players.id"))
 
     player = relationship("Player", back_populates="hiscores")
+
+    def __repr__(self):
+        return "<Hiscore(id='{}', new_exp='{}', total_gained_exp={}, created_at={}), player_id={})>"\
+            .format(self.id, self.new_exp, self.total_gained_exp, self.created_at, self.player_id)
