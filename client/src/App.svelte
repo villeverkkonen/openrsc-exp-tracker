@@ -69,11 +69,20 @@
           <span class="playerName">{player.name}</span>
           <div class="expContainer">
             {#if hiscores.length > 0}
-              <span
-                >{(
+              <p>
+                Gained exp since {new Date(
+                  hiscores[0].created_at
+                ).toLocaleDateString("en-US")}: {(
+                  Math.round(
+                    hiscores[hiscores.length - 1].total_gained_exp * 100
+                  ) / 100
+                ).toLocaleString("en-US")}
+              </p>
+              <p>
+                Total exp: {(
                   Math.round(hiscores[hiscores.length - 1].new_exp * 100) / 100
-                ).toLocaleString("en-US")} exp</span
-              >
+                ).toLocaleString("en-US")}
+              </p>
               <div class="expBarContainer">
                 <div
                   class="expBar"
@@ -94,6 +103,17 @@
       {/each}
     </div>
   {/if}
+  <a
+    class="githubLink"
+    href="https://github.com/villeverkkonen/openrsc-exp-tracker"
+    target="_blank"
+  >
+    <img
+      class="githubIcon"
+      src="images/github-mark-white.svg"
+      alt="Link to source code in GitHub"
+    />
+  </a>
 </main>
 
 <style>
@@ -138,5 +158,14 @@
   .expBar {
     background-color: cyan;
     height: 100%;
+  }
+
+  .githubLink {
+    float: right;
+    margin: 15px;
+  }
+
+  .githubIcon {
+    width: 40px;
   }
 </style>

@@ -5,7 +5,7 @@
 
   let chartData = data.map((hiscore) => hiscore.new_exp);
   let labels = data.map((hiscore) =>
-    new Date(hiscore.created_at).toDateString()
+    new Date(hiscore.created_at).toLocaleDateString("en-US")
   );
   let ctx;
   let chartCanvas;
