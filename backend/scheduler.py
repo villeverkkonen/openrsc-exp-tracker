@@ -13,7 +13,7 @@ API_BASE_URL = os.getenv("API_URL", "http://localhost:9000")
 
 # Run once a day at midnight
 # @app.task(cron("0 0 * * *"))
-@app.task('every 1 hour')
+@app.task('every 30 minutes')
 async def update_hiscores():
     print('Starting hiscores update')
 
@@ -29,7 +29,8 @@ async def update_hiscores():
         parsed_new_exp = parse_exp(new_exp)
         total_gained_exp = parsed_new_exp - player['original_exp']
 
-        hiscore = {"new_exp": parsed_new_exp, "total_gained_exp": total_gained_exp}
+        hiscore = {"new_exp": parsed_new_exp,
+                   "total_gained_exp": total_gained_exp}
         async with httpx.AsyncClient() as client:
             CREATE_HISCORE_URL = API_BASE_URL + \
                 "/api/players/" + str(player['id']) + "/hiscores"
