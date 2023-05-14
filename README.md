@@ -1,6 +1,8 @@
 # OpenRSC experience tracker
 
-Python backend does webscraping from [rsc.vet](https://rsc.vet/) hiscores once a day at midnight UTC time with Rocketry for every involved player and parses the received HTML by BeautifulSoup. Hiscores and Players are saved to SQLite database. Svelte frontend receives the data through API call.
+README and project still under construction
+
+Python backend does webscraping from [rsc.vet](https://rsc.vet/) hiscores once a day at midnight UTC time with Rocketry for every involved player and parses the received HTML by BeautifulSoup. Hiscores and Players are saved to PostgreSQL database. Svelte frontend receives the data through API call.
 
 ### [App in Heroku](https://openrsc-exp-tracker.herokuapp.com/)
 
@@ -8,10 +10,11 @@ Python backend does webscraping from [rsc.vet](https://rsc.vet/) hiscores once a
 
 ### Steps to run locally:
 1. Docker needs to be installed
-2. Run `docker-compose build && docker-compose up` in project root
+2. Run `./start.sh` in project root
 3. Open `localhost:9000` from your browser (first load takes about 20 seconds per player)
 
 ### Running without Docker:
+Work in progress, does not work at the moment
 1. From project root `cd client`
 2. `npm i`
 3. `npm run build`
@@ -30,14 +33,29 @@ Python backend does webscraping from [rsc.vet](https://rsc.vet/) hiscores once a
 
 ### Running the tests
 
-Tests currently work in progress at May 8th 2023
+Tests currently work in progress
 1. For backend tests in folder backend run `pytest`
 2. For frontend tests in folder client run `npm run test`
 
 ### Configuring for your own needs
 1. You can add Players through API with for example Postman
-    - POST request to http://localhost:9000/api/players with JSON body { "name": <name>, "original_exp": <current_exp_from_hiscores> }
+    - POST request to http://localhost:9000/api/players with JSON body:
+    ```
+    {
+      "name": <name>,
+      "original_exp": <current_exp_from_hiscores>
+    }
+    ```
 2. From scheduler.py file search for text "Overall" and replace it with skill of your choice, for example "Agility"
 3. From same scheduler.py file you can also change how often the webscraping happens. Though it would be nice not to trigger it too often to not stress test rsc.vet too much.
 4. Dummy test data generating script work in progress
-5. You might want to comment out the task rom file scheduler.py so it doesn't trigger the scraping if you don't need it. If you for example create the data manually through API call or SQLite console.
+5. You might want to comment out the task from file scheduler.py so it doesn't trigger the scraping if you don't need it. If you for example create the data manually through API call or straight to the database.
+
+### Technology keywords
+- Python
+- Svelte
+- FastAPI
+- Rocketry
+- BeautifulSoup
+- PostgreSQL
+- Heroku
