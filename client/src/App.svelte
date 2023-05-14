@@ -85,15 +85,6 @@
                       highestExpGain}%"
                 />
               </div>
-              <p>
-                Tracked since {new Date(
-                  hiscores.reduce((previous, current) => {
-                    return previous.created_at < current.created_at
-                      ? previous
-                      : current;
-                  }).created_at
-                ).toDateString()}
-              </p>
               <LineChart data={hiscores} />
             {:else}
               <p>No data to show</p>
