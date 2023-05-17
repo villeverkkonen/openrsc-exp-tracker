@@ -10,9 +10,9 @@
   let ctx;
   let chartCanvas;
 
-  onMount(async (promise) => {
+  onMount(async () => {
     ctx = chartCanvas.getContext("2d");
-    var chart = new Chart(ctx, {
+    new Chart(ctx, {
       type: "line",
       data: {
         labels,
