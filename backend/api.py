@@ -1,24 +1,25 @@
 from fastapi import Depends, FastAPI, HTTPException, Request, Response
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
-from itertools import groupby
-from operator import attrgetter
 from database import crud
 from database import models
 from database import schemas
 from database.database import SessionLocal, engine
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
-import string
-import random
-import json
-import httpx
+# import string
+# import random
+# import json
+# import httpx
 
 models.Base.metadata.create_all(bind=engine)
 
 
 app = FastAPI(
     title="OpenRSC overall exp tracker",
-    description="Tracks players overall experience every three hours"
+    description="Tracks players overall experience gain once a day"
 )
 api_app = FastAPI(title="API")
 app.mount("/api", api_app)
@@ -48,11 +49,6 @@ def get_db():
         db.close()
 
 
-@api_app.get('/hiscores')
-async def get_hiscores():
-    return get_hiscores()
-
-
 @api_app.get('/hiscores_by_players')
 async def get_hiscores_by_players(db: Session = Depends(get_db)):
     hiscores_by_players = []
@@ -62,7 +58,8 @@ async def get_hiscores_by_players(db: Session = Depends(get_db)):
             db=db, player_id=player.id)
         hiscores_by_players.append(
             {"player": player, "hiscores": hiscores})
-    hiscores_by_players = sorted(hiscores_by_players, key=lambda x: x['hiscores'][-1].total_gained_exp if x['hiscores'] else 0, reverse=True)
+    hiscores_by_players = sorted(
+        hiscores_by_players, key=lambda x: x['hiscores'][-1].total_gained_exp if x['hiscores'] else 0, reverse=True)
     return hiscores_by_players
 
 
@@ -86,6 +83,8 @@ def create_player(player: schemas.PlayerCreate, db: Session = Depends(get_db)):
 
 @api_app.get('/players', response_model=list[schemas.Player])
 def get_players(db: Session = Depends(get_db)):
+    print('DATABASE_URL:')
+    print(os.environ['DATABASE_URL'])
     return crud.get_players(db)
 
 
@@ -95,6 +94,7 @@ def get_player_by_name(name: str, db: Session = Depends(get_db)):
 
 
 # Initialize database with dummy data for local testing
+# Uncomment imports also
 # TODO doesn't work yet
 # def create_dummy_hiscores_by_players():
 #     db: Session = Depends(get_db)
