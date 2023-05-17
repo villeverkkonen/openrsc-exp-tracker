@@ -42,8 +42,8 @@ Tests currently work in progress
     - POST request to http://localhost:9000/api/players with JSON body:
     ```
     {
-      "name": <name>,
-      "original_exp": <current_exp_from_hiscores>
+      "name": "Test Name",
+      "original_exp": 1002003
     }
     ```
 2. From scheduler.py file search for text "Overall" and replace it with skill of your choice, for example "Agility"
@@ -52,10 +52,10 @@ Tests currently work in progress
 5. You might want to comment out the task from file scheduler.py so it doesn't trigger the scraping if you don't need it. If you for example create the data manually through API call or straight to the database.
 
 ### Technology keywords
-- Python
-- Svelte
-- FastAPI
-- Rocketry
-- BeautifulSoup
-- PostgreSQL
-- Heroku
+- Python backend
+- Svelte frontend
+- FastAPI web framework
+- Rocketry task scheduler
+- Beautiful Soup for parsing HTML
+- PostgreSQL database
+- Heroku deployment environment
