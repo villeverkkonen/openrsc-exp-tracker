@@ -14,15 +14,14 @@ Python backend does webscraping from [rsc.vet](https://rsc.vet/) hiscores once a
 3. Open `localhost:9000` from your browser (first load takes about 20 seconds per player)
 
 ### Running without Docker:
-Work in progress, does not work at the moment
 1. From project root `cd client`
 2. `npm i`
-3. `npm run build`
-4. `cd ..`
+3. `npm run autobuild` (this will build client automatically when modifying files)
+4. Open new terminal
 5. `cd backend`
 6. Create python venv
     - Windows:
-        - `python -m venv venv` (or python3)
+        - `python -m venv venv` (or python3, this needs to be run only first time)
         - `source venv/Scripts/activate`
     - Unix/macOS:
         - `python -m venv venv` (or python3)
