@@ -84,7 +84,7 @@ def create_player(player: schemas.PlayerCreate, db: Session = Depends(get_db)):
 @api_app.get('/players', response_model=list[schemas.Player])
 def get_players(db: Session = Depends(get_db)):
     print('DATABASE_URL:')
-    print(os.environ['DATABASE_URL'])
+    print(os.environ.get("DATABASE_URL"))
     return crud.get_players(db)
 
 
