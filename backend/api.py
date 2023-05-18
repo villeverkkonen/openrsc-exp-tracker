@@ -51,8 +51,6 @@ def get_db():
 
 @api_app.get('/hiscores_by_players')
 async def get_hiscores_by_players(db: Session = Depends(get_db)):
-    print('DATABASE_URL:')
-    print(os.environ.get("DATABASE_URL"))
     hiscores_by_players = []
     players = crud.get_players(db)
     for player in players:
