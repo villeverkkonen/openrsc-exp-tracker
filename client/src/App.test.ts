@@ -3,7 +3,7 @@ require("@testing-library/svelte");
 import { render, screen, waitFor } from "@testing-library/svelte";
 import { rest } from "msw";
 import { setupServer } from "msw/node";
-import { setupJestCanvasMock } from "jest-canvas-mock";
+import MockLineChart from "./components/__mocks__/LineChart.svelte";
 import App from "./App.svelte";
 
 const date = new Date("2023-05-17T00:00:00");
@@ -78,6 +78,10 @@ const mockHiscoresByPlayers = [
   },
 ];
 
+jest.mock("./components/LineChart.svelte", () => ({
+  default: MockLineChart,
+}));
+
 describe("App", () => {
   const server = setupServer(
     rest.get("/api/hiscores_by_players", (req, res, ctx) => {
@@ -85,11 +89,11 @@ describe("App", () => {
     })
   );
 
-  beforeAll(() => server.listen());
+  beforeAll(() => {
+    server.listen();
+  });
   beforeEach(() => {
     render(App);
-    // jest.resetAllMocks();
-    setupJestCanvasMock();
   });
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());

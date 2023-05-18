@@ -72,6 +72,7 @@
                 ).toLocaleString("en-US")}
               </p>
               <LineChart data={hiscores} />
+              <!-- <Test /> -->
             {:else}
               <p>No data to show</p>
             {/if}

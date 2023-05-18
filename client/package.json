@@ -29,26 +29,24 @@
       "ts",
       "svelte"
     ],
-    "testEnvironment": "jsdom",
-    "setupFiles": ["jest-canvas-mock"],
-    "setupFilesAfterEnv": [
-      "./setupTests.js"
-    ]
+    "preset": "ts-jest",
+    "testEnvironment": "jsdom"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.21.4",
     "@babel/preset-typescript": "^7.21.4",
     "@sveltejs/vite-plugin-svelte": "^2.0.3",
-    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/jest-dom": "github:testing-library/jest-dom",
     "@testing-library/svelte": "^3.2.2",
     "@tsconfig/svelte": "^3.0.0",
-    "@types/jest": "^29.5.0",
+    "@types/jest": "^29.5.1",
     "autoprefixer": "^10.4.7",
     "babel-jest": "^29.5.0",
     "canvas": "^2.11.2",
     "jest": "^29.5.0",
     "jest-canvas-mock": "^2.5.0",
     "jest-environment-jsdom": "^29.5.0",
+    "jest-transform-svelte": "^2.1.1",
     "svelte": "^3.55.1",
     "svelte-check": "^2.10.3",
     "svelte-jester": "^2.3.2",
