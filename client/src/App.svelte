@@ -24,7 +24,6 @@
   }
 
   let hiscoresByPlayers: HiscoresByPlayer[] = [];
-  let highestExpGain: number = 0;
   let loading: boolean = true;
 
   onMount(async () => {
@@ -37,17 +36,6 @@
       .then((response) => {
         const result: HiscoresByPlayer[] = response.data;
         hiscoresByPlayers = result;
-        highestExpGain = Math.max(
-          ...result.map((hiscoreByPlayer) => {
-            if (hiscoreByPlayer.hiscores.length === 0) {
-              return 0;
-            }
-            return (
-              hiscoreByPlayer.hiscores[hiscoreByPlayer.hiscores.length - 1]
-                .new_exp - hiscoreByPlayer.player.original_exp
-            );
-          })
-        );
       })
       .catch((error) => {
         console.log(error);
@@ -83,17 +71,6 @@
                   Math.round(hiscores[hiscores.length - 1].new_exp * 100) / 100
                 ).toLocaleString("en-US")}
               </p>
-              <div class="expBarContainer">
-                <div
-                  class="expBar"
-                  style="width:{highestExpGain === 0
-                    ? 0
-                    : (100 *
-                        (hiscores[hiscores.length - 1].new_exp -
-                          player.original_exp)) /
-                      highestExpGain}%"
-                />
-              </div>
               <LineChart data={hiscores} />
             {:else}
               <p>No data to show</p>
@@ -144,20 +121,6 @@
 
   .playerName {
     font-weight: bold;
-  }
-
-  .expBarContainer {
-    background-color: rgb(112 128 144);
-    height: 24px;
-    width: 90%;
-    padding: 4px;
-    border-radius: 3px;
-    margin: 5px auto;
-  }
-
-  .expBar {
-    background-color: cyan;
-    height: 100%;
   }
 
   .githubLink {
