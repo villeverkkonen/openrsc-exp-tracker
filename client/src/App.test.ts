@@ -10,6 +10,12 @@ const date = new Date("2023-05-17T00:00:00");
 
 const mockHiscoresByPlayers = [
   {
+    player: {
+      created_at: date,
+      id: 1,
+      name: "Elaine",
+      original_exp: 1337,
+    },
     hiscores: [
       {
         id: 1,
@@ -26,14 +32,14 @@ const mockHiscoresByPlayers = [
         player_id: 1,
       },
     ],
-    player: {
-      created_at: date,
-      id: 1,
-      name: "Elaine",
-      original_exp: 1337,
-    },
   },
   {
+    player: {
+      created_at: date,
+      id: 2,
+      name: "Guybrush",
+      original_exp: 0,
+    },
     hiscores: [
       {
         id: 2,
@@ -43,14 +49,14 @@ const mockHiscoresByPlayers = [
         player_id: 2,
       },
     ],
-    player: {
-      created_at: date,
-      id: 2,
-      name: "Guybrush",
-      original_exp: 0,
-    },
   },
   {
+    player: {
+      created_at: date,
+      id: 3,
+      name: "LeChuck",
+      original_exp: 0,
+    },
     hiscores: [
       {
         id: 4,
@@ -60,21 +66,15 @@ const mockHiscoresByPlayers = [
         player_id: 3,
       },
     ],
-    player: {
-      created_at: date,
-      id: 3,
-      name: "LeChuck",
-      original_exp: 0,
-    },
   },
   {
-    hiscores: [],
     player: {
       created_at: new Date(date).setDate(date.getDate() + 1),
       id: 4,
       name: "Wally",
       original_exp: 0,
     },
+    hiscores: [],
   },
 ];
 
@@ -110,18 +110,31 @@ describe("App", () => {
   it("should show cards with valid texts", async () => {
     await waitFor(() => {
       expect(screen.queryByText("Loading...")).toBeNull();
+
       expect(screen.getByText("Elaine")).toBeInTheDocument();
       expect(
         screen.getByText("Gained exp since 5/17/2023: 2,000", { exact: false })
       ).toBeInTheDocument();
+      expect(
+        screen.getByText("Total exp: 3,337", { exact: false })
+      ).toBeInTheDocument();
+
       expect(screen.getByText("Guybrush")).toBeInTheDocument();
       expect(
         screen.getByText("Gained exp since 5/18/2023: 350", { exact: false })
       ).toBeInTheDocument();
+      expect(
+        screen.getByText("Total exp: 350", { exact: false })
+      ).toBeInTheDocument();
+
       expect(screen.getByText("LeChuck")).toBeInTheDocument();
       expect(
         screen.getByText("Gained exp since 5/18/2023: 0", { exact: false })
       ).toBeInTheDocument();
+      expect(
+        screen.getByText("Total exp: 0", { exact: false })
+      ).toBeInTheDocument();
+
       expect(screen.getByText("Wally")).toBeInTheDocument();
       expect(screen.getByText("No data to show")).toBeInTheDocument();
     });
