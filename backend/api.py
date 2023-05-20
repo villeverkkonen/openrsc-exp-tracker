@@ -52,6 +52,8 @@ def get_db():
 async def get_hiscores_by_players(db: Session = Depends(get_db)):
     hiscores_by_players = []
     players = crud.get_players(db)
+    print("PLAYERS:")
+    print(players)
     for player in players:
         hiscores = crud.get_hiscores_by_player_id(
             db=db, player_id=player.id)
