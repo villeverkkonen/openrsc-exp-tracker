@@ -51,16 +51,20 @@ def get_db():
 @api_app.get('/hiscores_by_players')
 async def get_hiscores_by_players(db: Session = Depends(get_db)):
     hiscores_by_players = []
-    players = crud.get_players(db)
-    print("PLAYERS:")
-    print(players)
+    players = await crud.get_players(db)
     for player in players:
-        hiscores = crud.get_hiscores_by_player_id(
-            db=db, player_id=player.id)
+        hiscores = await crud.get_hiscores_by_player_id(
+            db, player_id=player['id'])
+        print("hiscores")
+        print(hiscores)
         hiscores_by_players.append(
             {"player": player, "hiscores": hiscores})
+        # print("BEFORE SORT:")
+        # print(hiscores_by_players)
     hiscores_by_players = sorted(
-        hiscores_by_players, key=lambda x: x['hiscores'][-1].total_gained_exp if x['hiscores'] else 0, reverse=True)
+        hiscores_by_players, key=lambda x: x['hiscores'][-1]['total_gained_exp'] if x['hiscores'] else 0, reverse=True)
+    # print("AFTER SORT:")
+    # print(hiscores_by_players)
     return hiscores_by_players
 
 
