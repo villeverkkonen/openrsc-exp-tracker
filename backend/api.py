@@ -5,7 +5,6 @@ from database import crud
 from database import models
 from database import schemas
 from database.database import SessionLocal, engine
-import os
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -63,11 +62,6 @@ async def get_hiscores_by_players(db: Session = Depends(get_db)):
     return hiscores_by_players
 
 
-@api_app.get('/hiscores_by_player_id')
-async def get_hiscores_by_player_id(player_id: int, db: Session = Depends(get_db)):
-    return crud.get_hiscores_by_player_id(db=db, player_id=player_id)
-
-
 @api_app.post('/players/{player_id}/hiscores', response_model=schemas.Hiscore)
 def create_hiscore(hiscore: schemas.HiscoreCreate, player_id: int, db: Session = Depends(get_db)):
     return crud.create_hiscore(db=db, hiscore=hiscore, player_id=player_id)
@@ -84,11 +78,6 @@ def create_player(player: schemas.PlayerCreate, db: Session = Depends(get_db)):
 @api_app.get('/players', response_model=list[schemas.Player])
 def get_players(db: Session = Depends(get_db)):
     return crud.get_players(db)
-
-
-@api_app.get('/players/{name}', response_model=list[schemas.Player])
-def get_player_by_name(name: str, db: Session = Depends(get_db)):
-    return crud.get_player_by_name(db=db, name=name)
 
 
 # Initialize database with dummy data for local testing
