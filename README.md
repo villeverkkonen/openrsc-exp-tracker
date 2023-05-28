@@ -11,7 +11,10 @@ Python backend does webscraping from [rsc.vet](https://rsc.vet/) hiscores once a
 ### Steps to run locally:
 1. Docker needs to be installed
 2. Run `./start.sh` in project root
-3. Open `localhost:9000` from your browser (first load takes about 20 seconds per player)
+3. Open `localhost:9000` from your browser
+4. Access database inside Docker Container by opening `localhost:5050` from your browser and logging ing to the PgAdmin with:
+    - Username: pgadmin4@pgadmin.org
+    - Password: admin
 
 ### Running without Docker:
 1. From project root `cd client`
@@ -28,13 +31,17 @@ Python backend does webscraping from [rsc.vet](https://rsc.vet/) hiscores once a
         - `source env/bin/activate`
 7. `pip install -r requirements.txt`
 8. `python -u main.py` (or python3, -u shows scheduler.py logs)
-9. Open `localhost:9000` from your browser (first load takes about 20 seconds per player)
+9. Open `localhost:9000` from your browser
+10. Access database with a client of your choice:
+    - Host: localhost
+    - Port: 5432
+    - Database: postgres
+    - Username: postgres
+    - Password: postgres
 
 ### Running the tests
-
-Tests currently work in progress
-1. For backend tests in folder backend run `pytest`
-2. For frontend tests in folder client run `npm run test`
+1. For backend tests uncomment and comment the right DATABASE_URL in .env file and run `pytest` in folder `backend`
+2. For frontend tests run `npm run test` in folder `client`
 
 ### Configuring for your own needs
 1. You can add Players through API with for example Postman
@@ -46,9 +53,9 @@ Tests currently work in progress
     }
     ```
 2. From scheduler.py file search for text "Overall" and replace it with skill of your choice, for example "Agility"
-3. From same scheduler.py file you can also change how often the webscraping happens. Though it would be nice not to trigger it too often to not stress test rsc.vet too much.
+3. From same scheduler.py file you can also change how often the webscraping happens. Though it would be nice not to trigger it too often to not stress test rsc.vet too much
 4. Dummy test data generating script work in progress
-5. You might want to comment out the task from file scheduler.py so it doesn't trigger the scraping if you don't need it. If you for example create the data manually through API call or straight to the database.
+5. You might want to comment out the task from file scheduler.py so it doesn't trigger the scraping if you don't need it. If you for example create the data manually through API call or straight to the database. There are also commented some alternate tasks to trigger the scraping instantly when app is built.
 
 ### Technology keywords
 - Python backend

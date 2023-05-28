@@ -17,17 +17,17 @@ models.Base.metadata.create_all(bind=engine)
 
 
 app = FastAPI(
-    title="OpenRSC overall exp tracker",
-    description="Tracks players overall experience gain once a day"
+    title='OpenRSC overall exp tracker',
+    description='Tracks players overall experience gain once a day'
 )
-api_app = FastAPI(title="API")
-app.mount("/api", api_app)
-app.mount("/", StaticFiles(directory="../client/dist", html=True), name="client")
+api_app = FastAPI(title='API')
+app.mount('/api', api_app)
+app.mount('/', StaticFiles(directory='../client/dist', html=True), name='client')
 
 
-@app.middleware("http")
+@app.middleware('http')
 async def db_session_middleware(request: Request, call_next):
-    response = Response("Internal server error", status_code=500)
+    response = Response('Internal server error', status_code=500)
     try:
         request.state.db = SessionLocal()
         response = await call_next(request)
@@ -48,47 +48,43 @@ def get_db():
         db.close()
 
 
+@api_app.get('/players', response_model=list[schemas.Player])
+async def get_players(db: Session = Depends(get_db)):
+    players = crud.get_players(db)
+    return players
+
+
+@api_app.post('/players', response_model=schemas.Player)
+async def create_player(player: schemas.PlayerCreate, db: Session = Depends(get_db)):
+    db_player = crud.get_player_by_name(db=db, name=player.name)
+    if db_player:
+        raise HTTPException(status_code=400, detail='Name already registered')
+    return crud.create_player(db=db, player=player)
+
+
 @api_app.get('/hiscores_by_players')
 async def get_hiscores_by_players(db: Session = Depends(get_db)):
     hiscores_by_players = []
-    players = await crud.get_players(db)
+    players = crud.get_players(db)
     for player in players:
-        hiscores = await crud.get_hiscores_by_player_id(
-            db, player_id=player['id'])
-        print("hiscores")
-        print(hiscores)
+        hiscores = crud.get_hiscores_by_player_id(
+            db, player_id=player.id)
         hiscores_by_players.append(
-            {"player": player, "hiscores": hiscores})
-        # print("BEFORE SORT:")
-        # print(hiscores_by_players)
+            {'player': player, 'hiscores': hiscores})
+
     hiscores_by_players = sorted(
-        hiscores_by_players, key=lambda x: x['hiscores'][-1]['total_gained_exp'] if x['hiscores'] else 0, reverse=True)
-    # print("AFTER SORT:")
-    # print(hiscores_by_players)
+        hiscores_by_players, key=lambda x: x['hiscores'][-1].total_gained_exp if x['hiscores'] else 0, reverse=True)
     return hiscores_by_players
 
 
 @api_app.post('/players/{player_id}/hiscores', response_model=schemas.Hiscore)
-def create_hiscore(hiscore: schemas.HiscoreCreate, player_id: int, db: Session = Depends(get_db)):
+async def create_hiscore(hiscore: schemas.HiscoreCreate, player_id: int, db: Session = Depends(get_db)):
     return crud.create_hiscore(db=db, hiscore=hiscore, player_id=player_id)
 
 
-@api_app.post('/players', response_model=schemas.Player)
-def create_player(player: schemas.PlayerCreate, db: Session = Depends(get_db)):
-    db_player = crud.get_player_by_name(db=db, name=player.name)
-    if db_player:
-        raise HTTPException(status_code=400, detail="Name already registered")
-    return crud.create_player(db=db, player=player)
-
-
-@api_app.get('/players', response_model=list[schemas.Player])
-def get_players(db: Session = Depends(get_db)):
-    return crud.get_players(db)
-
-
+# TODO doesn't work yet
 # Initialize database with dummy data for local testing
 # Uncomment imports also
-# TODO doesn't work yet
 # def create_dummy_hiscores_by_players():
 #     db: Session = Depends(get_db)
 
