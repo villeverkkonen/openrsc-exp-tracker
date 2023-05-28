@@ -13,15 +13,15 @@ class Server(uvicorn.Server):
 
 
 async def main():
-    port = int(os.environ.get("PORT", 9000))
+    port = int(os.getenv('PORT', 9000))
     server = Server(config=uvicorn.Config(
-        app_fastapi, host="0.0.0.0", port=port, workers=1, loop="asyncio"))
+        app_fastapi, host='0.0.0.0', port=port, workers=1, loop='asyncio'))
     api = asyncio.create_task(server.serve())
     sched = asyncio.create_task(app_rocketry.serve())
     await asyncio.wait([sched, api])
 
 
-if __name__ == "__main__":
-    logger = logging.getLogger("rocketry.task")
+if __name__ == '__main__':
+    logger = logging.getLogger('rocketry.task')
     logger.addHandler(logging.StreamHandler())
     asyncio.run(main())

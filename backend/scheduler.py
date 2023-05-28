@@ -4,15 +4,15 @@ import httpx
 from bs4 import BeautifulSoup
 from rocketry import Rocketry
 from rocketry.conds import cron
+from dotenv import load_dotenv
+load_dotenv()
 
-app = Rocketry(config={"task_execution": "async"})
-
-
-API_BASE_URL = os.getenv("API_URL", "http://localhost:9000")
+app = Rocketry(config={'task_execution': 'async'})
+API_BASE_URL = os.getenv('API_URL')
 
 
 # Run once a day at midnight
-@app.task(cron("0 0 * * *"))
+@app.task(cron('0 0 * * *'))
 # @app.task('every 30 minutes')
 # @app.task('every 1 hour')
 async def update_hiscores():
@@ -20,7 +20,7 @@ async def update_hiscores():
 
     players = []
     async with httpx.AsyncClient() as client:
-        GET_PLAYERS_URL = API_BASE_URL + "/api/players"
+        GET_PLAYERS_URL = API_BASE_URL + '/api/players'
         players_response = await client.get(GET_PLAYERS_URL, timeout=10.0)
         players = players_response.json()
 
@@ -30,12 +30,12 @@ async def update_hiscores():
             parsed_new_exp = parse_exp(new_exp)
             total_gained_exp = parsed_new_exp - player['original_exp']
 
-            hiscore = {"new_exp": parsed_new_exp,
-                       "total_gained_exp": total_gained_exp}
+            hiscore = {'new_exp': parsed_new_exp,
+                       'total_gained_exp': total_gained_exp}
             CREATE_HISCORE_URL = API_BASE_URL + \
-                "/api/players/" + str(player['id']) + "/hiscores"
+                '/api/players/' + str(player['id']) + '/hiscores'
             hiscore_response = await client.post(CREATE_HISCORE_URL, json=hiscore, timeout=10.0)
-            print("Created hiscore:")
+            print('Created hiscore:')
             print(hiscore_response.json())
 
             if index < len(players) - 1:
@@ -49,7 +49,7 @@ async def get_new_exp_from_hiscores(player_name, client):
     if ' ' in trimmed_player_name:
         trimmed_player_name = trimmed_player_name.replace(' ', '%20')
 
-    URL = "https://rsc.vet/player/preservation/" + trimmed_player_name
+    URL = 'https://rsc.vet/player/preservation/' + trimmed_player_name
     response = await client.get(URL, timeout=10.0)
     soup = BeautifulSoup(response.content, 'lxml')
 
@@ -70,5 +70,5 @@ def parse_exp(new_exp):
     return parsed_new_exp
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run()

@@ -17,11 +17,11 @@ services:
       - db:/var/lib/postgresql/data
   web:
     build: .
-    command: bash -c "alembic upgrade head"
+    command: bash -c 'alembic upgrade head'
     volumes:
       - .:/code
     ports:
-      - "8000:8000"
+      - '8000:8000'
     depends_on:
       - db
   pgadmin:
