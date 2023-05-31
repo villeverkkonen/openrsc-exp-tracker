@@ -64,4 +64,6 @@ Python backend does webscraping from [rsc.vet](https://rsc.vet/) hiscores once a
 - Rocketry task scheduler
 - Beautiful Soup for parsing HTML
 - PostgreSQL database
+- SQLAlchemy database toolkit
+- Docker for running app in container
 - Heroku deployment environment

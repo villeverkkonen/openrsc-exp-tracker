@@ -36,7 +36,7 @@
       {#each hiscoresByPlayers as { player, hiscores }}
         <div class="card">
           <span class="playerName">{player.name}</span>
-          <ExpContainer {hiscores} />
+          <ExpContainer {player} {hiscores} />
         </div>
       {/each}
     </div>
