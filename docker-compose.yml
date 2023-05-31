@@ -4,6 +4,8 @@ services:
     build: .
     ports:
       - '9000:9000'
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432
   db:
     image: postgres:15.3-alpine
     restart: always
@@ -24,6 +26,8 @@ services:
       - '8000:8000'
     depends_on:
       - db
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4
