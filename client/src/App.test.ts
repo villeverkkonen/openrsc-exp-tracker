@@ -118,6 +118,9 @@ describe("App", () => {
       expect(
         screen.getByText("Total exp: 3,337", { exact: false })
       ).toBeInTheDocument();
+      expect(
+        screen.getByText("Average daily exp: 1,000", { exact: false })
+      ).toBeInTheDocument();
 
       expect(screen.getByText("Guybrush")).toBeInTheDocument();
       expect(
@@ -126,6 +129,9 @@ describe("App", () => {
       expect(
         screen.getByText("Total exp: 350", { exact: false })
       ).toBeInTheDocument();
+      expect(
+        screen.getByText("Average daily exp: 350", { exact: false })
+      ).toBeInTheDocument();
 
       expect(screen.getByText("LeChuck")).toBeInTheDocument();
       expect(
@@ -133,6 +139,9 @@ describe("App", () => {
       ).toBeInTheDocument();
       expect(
         screen.getByText("Total exp: 0", { exact: false })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText("Average daily exp: 0", { exact: false })
       ).toBeInTheDocument();
 
       expect(screen.getByText("Wally")).toBeInTheDocument();

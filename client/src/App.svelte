@@ -1,27 +1,8 @@
 <script lang="ts">
   import axios from "axios";
   import { onMount } from "svelte";
-  import LineChart from "./components/LineChart.svelte";
-
-  interface Player {
-    id: number;
-    name: string;
-    original_exp: number;
-    created_at: Date;
-  }
-
-  interface Hiscore {
-    id: number;
-    new_exp: number;
-    total_gained_exp: number;
-    created_at: Date;
-    player_id: number;
-  }
-
-  interface HiscoresByPlayer {
-    player: Player;
-    hiscores: Hiscore[];
-  }
+  import type { HiscoresByPlayer } from "./Types/types";
+  import ExpContainer from "./components/ExpContainer.svelte";
 
   let hiscoresByPlayers: HiscoresByPlayer[] = [];
   let loading: boolean = true;
@@ -55,31 +36,7 @@
       {#each hiscoresByPlayers as { player, hiscores }}
         <div class="card">
           <span class="playerName">{player.name}</span>
-          <div class="expContainer">
-            {#if hiscores.length > 0}
-              <p>
-                Gained exp since {new Date(
-                  hiscores[0].created_at
-                ).toLocaleDateString("en-US")}: {Math.floor(
-                  hiscores[hiscores.length - 1].total_gained_exp
-                ).toLocaleString("en-US")}
-              </p>
-              <p>
-                Total exp: {Math.floor(
-                  hiscores[hiscores.length - 1].new_exp
-                ).toLocaleString("en-US")}
-              </p>
-              <p>
-                Average daily exp: {Math.floor(
-                  hiscores[hiscores.length - 1].total_gained_exp /
-                    hiscores.length
-                ).toLocaleString("en-US")}
-              </p>
-              <LineChart data={hiscores} />
-            {:else}
-              <p>No data to show</p>
-            {/if}
-          </div>
+          <ExpContainer {hiscores} />
         </div>
       {/each}
     </div>
