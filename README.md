@@ -1,7 +1,5 @@
 # OpenRSC experience tracker
 
-README and project still under construction
-
 Python backend does webscraping from [rsc.vet](https://rsc.vet/) hiscores once a day at midnight UTC time with Rocketry for every involved player and parses the received HTML by BeautifulSoup. Hiscores and Players are saved to PostgreSQL database. Svelte frontend receives the data through API call.
 
 ### [App in Heroku](https://openrsc-exp-tracker.herokuapp.com/)
