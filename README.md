@@ -39,8 +39,8 @@ Python backend does webscraping from [rsc.vet](https://rsc.vet/) hiscores once a
     - Password: postgres
 
 ### Running the tests
-1. For backend tests uncomment and comment the right DATABASE_URL in .env file and run `pytest` in folder `backend`
-2. For frontend tests run `npm run test` in folder `client`
+1. Backend: run `pytest` in folder `backend`
+2. Frontend: run `npm run test` in folder `client`
 
 ### Configuring for your own needs
 1. You can add Players through API with for example Postman
