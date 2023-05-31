@@ -11,8 +11,9 @@ Python backend does webscraping from [rsc.vet](https://rsc.vet/) hiscores once a
 ### Steps to run locally:
 1. Docker needs to be installed
 2. Run `./start.sh` in project root
+    - Runs migrations and puts docker-compose up
 3. Open `localhost:9000` from your browser
-4. Access database inside Docker Container by opening `localhost:5050` from your browser and logging ing to the PgAdmin with:
+4. Access database inside Docker Container by opening `localhost:5050` from your browser and logging to the PgAdmin with:
     - Username: pgadmin4@pgadmin.org
     - Password: admin
 
