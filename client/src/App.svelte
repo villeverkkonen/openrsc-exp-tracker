@@ -60,15 +60,19 @@
               <p>
                 Gained exp since {new Date(
                   hiscores[0].created_at
-                ).toLocaleDateString("en-US")}: {(
-                  Math.round(
-                    hiscores[hiscores.length - 1].total_gained_exp * 100
-                  ) / 100
+                ).toLocaleDateString("en-US")}: {Math.floor(
+                  hiscores[hiscores.length - 1].total_gained_exp
                 ).toLocaleString("en-US")}
               </p>
               <p>
-                Total exp: {(
-                  Math.round(hiscores[hiscores.length - 1].new_exp * 100) / 100
+                Total exp: {Math.floor(
+                  hiscores[hiscores.length - 1].new_exp
+                ).toLocaleString("en-US")}
+              </p>
+              <p>
+                Average daily exp: {Math.floor(
+                  hiscores[hiscores.length - 1].total_gained_exp /
+                    hiscores.length
                 ).toLocaleString("en-US")}
               </p>
               <LineChart data={hiscores} />

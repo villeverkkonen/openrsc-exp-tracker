@@ -18,7 +18,7 @@
         labels,
         datasets: [
           {
-            label: "Exp",
+            label: "Total exp",
             data: chartData,
             borderColor: "cyan",
           },
@@ -29,6 +29,28 @@
         plugins: {
           legend: {
             display: false,
+          },
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                const tooltipLabels = [];
+                let label = context.dataset.label || "";
+                label += `: ${context.parsed.y.toLocaleString("en-US")}`;
+                let gainedExpLabel = "From yesterday: +";
+                context.dataIndex === 0
+                  ? (gainedExpLabel += "0")
+                  : (gainedExpLabel += (
+                      context.parsed.y -
+                      parseInt(
+                        context.dataset.data[context.dataIndex - 1].toString()
+                      )
+                    ).toLocaleString("en-US"));
+
+                tooltipLabels.push(label);
+                tooltipLabels.push(gainedExpLabel);
+                return tooltipLabels;
+              },
+            },
           },
         },
         scales: {
