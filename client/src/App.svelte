@@ -41,17 +41,6 @@
       {/each}
     </div>
   {/if}
-  <a
-    class="githubLink"
-    href="https://github.com/villeverkkonen/openrsc-exp-tracker"
-    target="_blank"
-  >
-    <img
-      class="githubIcon"
-      src="images/github-mark-white.svg"
-      alt="Link to source code in GitHub"
-    />
-  </a>
 </main>
 
 <style>
@@ -82,14 +71,5 @@
 
   .playerName {
     font-weight: bold;
-  }
-
-  .githubLink {
-    float: right;
-    margin: 15px;
-  }
-
-  .githubIcon {
-    width: 40px;
   }
 </style>
